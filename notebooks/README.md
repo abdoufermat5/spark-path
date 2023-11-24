@@ -1,4 +1,6 @@
-## Setting Up a Single-Node Hadoop Cluster on Ubuntu 
+# Setting Up a Single-Node Hadoop Cluster on Ubuntu and Do some stuff on it
+
+## Part 1: setup
 
 Installing Hadoop on Ubuntu involves several steps. Before you start, ensure that your system meets the necessary prerequisites like having a Java Development Kit (JDK) installed, as Hadoop is built using Java. Here's a step-by-step guide to install Hadoop in a pseudo-distributed mode, which is a common setup for development and testing:
 
@@ -225,3 +227,67 @@ Add the following configuration between the `<configuration>` tags:
 - For a fully distributed setup or for advanced configurations, additional steps and configurations are necessary.
 
 It's highly recommended to refer to the official [Hadoop documentation](https://hadoop.apache.org/) or specific tutorials for detailed instructions and troubleshooting. The setup process can vary depending on the version of Hadoop and Ubuntu.
+
+## Part 2: DO your stuff
+
+For example say you want to store your parquet files in your simple Hadoop cluster.
+
+Since Hadoop uses the HDFS (Hadoop Distributed File System) for storage, you'll need to move your Parquet file from your local filesystem to HDFS. 
+Here's a basic guide on how to do this:
+
+
+### 1. Ensure Hadoop Services are Running
+
+Before you start, make sure that your Hadoop cluster is up and running. This includes the HDFS services. You can start them using the `start-dfs.sh` script if they are not already running.
+
+### 2. Locate Your Parquet File
+
+Identify the Parquet file on your local system that you want to store in the cluster. Make sure you know its path. For example, it could be something like `../data/US_state_weather.parquet` the one we are using in notebook 1.
+
+### 3. Create a Directory in HDFS
+
+You might want to organize your files in HDFS by creating directories. To create a directory in HDFS, use:
+
+```bash
+hdfs dfs -mkdir /path/to/hdfs/directory
+```
+
+For example, to create a directory named `parquet_files`, you would use:
+
+```bash
+hdfs dfs -mkdir /parquet_files
+```
+
+### 4. Copy the Parquet File to HDFS
+
+To copy the Parquet file from your local filesystem to HDFS, use the `hdfs dfs -put` command. For example:
+
+
+If you're copying it to the `parquet_files` directory you just created, the command would be:
+
+```bash
+hdfs dfs -put ../data/US_state_weather.parquet /parquet_files
+```
+
+### 5. Verify the File Transfer
+
+After copying the file, you can check if the file is indeed in HDFS by listing the contents of the directory:
+
+```bash
+hdfs dfs -ls /parquet_files
+
+# You should get something like this
+Found 1 items
+drwxr-xr-x   - abdou supergroup          0 2023-11-24 04:15 /parquet_files/US_state_weather.parquet
+```
+
+### Additional Information
+
+- **File Sizes**: HDFS is optimized for large files. If your Parquet file is particularly large, HDFS is a suitable storage solution.
+
+- **File Access**: Remember that once your file is in HDFS, you'll need to use Hadoop's tools and APIs to access and process the data.
+
+- **Parquet Tools**: If you need to interact with Parquet files (e.g., read, write, inspect), you might need specific tools or libraries compatible with Hadoop and Parquet, such as Apache Spark or Apache Drill.
+
+- **Data Processing**: For processing the data within the Parquet file, you can use tools like Apache Hive or Apache Spark, which integrate well with Hadoop and are capable of reading and writing Parquet files efficiently.
+

@@ -291,3 +291,8 @@ drwxr-xr-x   - abdou supergroup          0 2023-11-24 04:15 /parquet_files/US_st
 
 - **Data Processing**: For processing the data within the Parquet file, you can use tools like Apache Hive or Apache Spark, which integrate well with Hadoop and are capable of reading and writing Parquet files efficiently.
 
+
+### 6. Read parquet files from pyspark
+
+check [notebook 2](./notebook-2.ipynb)
+
